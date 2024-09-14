@@ -19,17 +19,22 @@ jobs:
         run: docker push kateryna123/nodejs-app:latest
         
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install SSH Client
-        run: sudo apt-get install openssh-client
+  needs: build
+  runs-on: ubuntu-latest
+  steps:
+    - name: Install SSH Client
+      run: sudo apt-get install -y openssh-client
 
-      - name: SSH into EC2 and deploy container
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@3.250.219.93 << EOF
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull kateryna123/nodejs-app:latest
-            docker rm -f nodejs-app-container || true
-            docker run -d -p 5000:5000 --name nodejs-app-container kateryna123/nodejs-app:latest
-          EOF
+    - name: Add SSH Key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key.pem
+        chmod 600 ~/.ssh/deploy_key.pem
+
+    - name: SSH into EC2 and deploy container
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key.pem ec2-user@3.250.219.93 << EOF
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker pull kateryna123/nodejs-app:latest
+          docker rm -f nodejs-app-container || true
+          docker run -d -p 5000:5000 --name nodejs-app-container kateryna123/nodejs-app:latest
+        EOF
