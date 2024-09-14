@@ -20,11 +20,16 @@ jobs:
         
   deploy:
     needs: build
-    runs-on: [aws-ec2]
+    runs-on: ubuntu-latest
     steps:
-      - name: Pull image from docker hub
-        run: docker pull kateryna123/nodejs-app:latest
-      - name: Delete old container
-        run: docker rm -f nodejs-app-container
-      - name: Run docker container
-        run: docker run -d -p 5000:5000 --name nodejs-app-container kateryna123/nodejs-app
+      - name: Install SSH Client
+        run: sudo apt-get install openssh-client
+
+      - name: SSH into EC2 and deploy container
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} ec2-user@3.250.219.93 << EOF
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker pull kateryna123/nodejs-app:latest
+            docker rm -f nodejs-app-container || true
+            docker run -d -p 5000:5000 --name nodejs-app-container kateryna123/nodejs-app:latest
+          EOF
