@@ -23,4 +23,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Server
-        run: ssh -o StrictHostKeyChecking=no -i ec2-user@3.250.219.93 '~/deploy.sh'
+        run: ssh -o StrictHostKeyChecking=no -i '~/deploy.sh' ec2-user@3.250.219.93
