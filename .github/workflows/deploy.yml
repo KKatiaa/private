@@ -29,5 +29,6 @@ jobs:
 
       - name: Deploy to Server
         run: | 
-          ssh ubuntu@3.250.219.93
-          mkdir 222
+          ssh -o StrictHostKeyChecking=no -i ubuntu@3.250.219.93 '
+          ./home/ubuntu/deploy.sh
+          '
