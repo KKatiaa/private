@@ -29,6 +29,6 @@ jobs:
 
       - name: Deploy to Server
         run: | 
-          ssh -o StrictHostKeyChecking=no -i ubuntu@3.250.219.93 '
-          ./home/ubuntu/deploy.sh
+          ssh -o StrictHostKeyChecking=no -i '/home/ubuntu/deploy.sh' ubuntu@3.250.219.93 '
+            ./deploy.sh
           '
