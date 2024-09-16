@@ -22,5 +22,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Deploy to Server
-        run: ssh -o StrictHostKeyChecking=no -i '/home/ubuntu/deploy.sh' ec2-user@3.250.219.93
+        run: ssh -o StrictHostKeyChecking=no -i ec2-user@3.250.219.93 '/home/ubuntu/deploy.sh'
