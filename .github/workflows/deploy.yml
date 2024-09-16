@@ -30,5 +30,6 @@ jobs:
       - name: Deploy to Server
         run: | 
           ssh -o StrictHostKeyChecking=no -i '/home/ubuntu/deploy.sh' ubuntu@3.250.219.93
+          mkdir 111
           cd private
           git pull
