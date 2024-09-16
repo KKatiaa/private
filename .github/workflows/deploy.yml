@@ -28,4 +28,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy to Server
-        run: ssh -o StrictHostKeyChecking=no -i '/home/ubuntu/deploy.sh' ubuntu@3.250.219.93
+        run: | 
+          ssh -o StrictHostKeyChecking=no -i '/home/ubuntu/deploy.sh' ubuntu@3.250.219.93
+          cd private
+          git pull
